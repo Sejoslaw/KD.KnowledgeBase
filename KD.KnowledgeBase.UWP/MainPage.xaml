@@ -5,29 +5,29 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    d:DesignWidth="1000"
+    d:DesignHeight="440">
 
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
         
         <!-- Form -->
-        <StackPanel Orientation="Vertical" Margin="30, 30, 30, 30">
-            <TextBlock Text="Salon" />
-            <DropDownButton Content="Yes" />
-            
-            <TextBlock Text="Fryzjer" />
-            
-            <TextBlock Text="Usługa" />
-            
-            <TextBlock Text="Data i godzina wizyty" />
-            <DatePicker />
+        <StackPanel Orientation="Vertical">
+            <TextBox Header="Salon" Margin="10" />
+            <TextBox Header="Fryzjer" Margin="10" />
+            <TextBox Header="Usługa" Margin="10" />
+            <DatePicker Header="Data i godzina wizyty" Margin="10" HorizontalAlignment="Stretch"/>
+            <TextBox Header="Cena wizyty" Margin="10" />
 
-            <TextBlock Text="Cena wizyty" />
-            
-            <Button Content="Zapisz wizytę" />
+            <!-- Form Buttons -->
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Zapisz wizytę" Margin="10" />
+                <Button Content="Usuń wizytę" Margin="10" />
+            </StackPanel>
         </StackPanel>
         
         <!-- Table -->
