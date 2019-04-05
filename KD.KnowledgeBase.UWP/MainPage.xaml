@@ -14,7 +14,7 @@
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        
+
         <!-- Form -->
         <StackPanel Orientation="Vertical">
             <TextBox Header="Salon" Margin="10" />
@@ -25,13 +25,20 @@
 
             <!-- Form Buttons -->
             <StackPanel Orientation="Horizontal">
-                <Button Content="Zapisz wizytę" Margin="10" />
-                <Button Content="Usuń wizytę" Margin="10" />
+                <Button Content="Zapisz wizytę" Margin="10" Click="ButtonSaveClick" />
+                <Button Content="Usuń wizytę" Margin="10" Click="ButtonDeleteClick" />
             </StackPanel>
         </StackPanel>
-        
+
         <!-- Table -->
-        <StackPanel Orientation="Vertical" Grid.Column="1">
-        </StackPanel>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <ListView Grid.Row="1" Header="Salon | Fryzjer | Usługa | Data i godzina wizyty | Cena wizyty" x:Name="tableListView">
+            </ListView>
+        </Grid>
     </Grid>
 </Page>
