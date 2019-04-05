@@ -7,7 +7,8 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     d:DesignWidth="1000"
-    d:DesignHeight="440">
+    d:DesignHeight="440"
+    Loaded="Page_Loaded">
 
     <Grid>
         <Grid.ColumnDefinitions>
