@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:KD.KnowledgeBase.UWP.Models"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     d:DesignWidth="1000"
@@ -18,11 +19,12 @@
 
         <!-- Form -->
         <StackPanel Orientation="Vertical">
-            <TextBox Header="Salon" Margin="10" />
-            <TextBox Header="Fryzjer" Margin="10" />
-            <TextBox Header="Usługa" Margin="10" />
-            <DatePicker Header="Data i godzina wizyty" Margin="10" HorizontalAlignment="Stretch"/>
-            <TextBox Header="Cena wizyty" Margin="10" />
+            <!--<TextBox Header="Salon" Margin="10" x:Name="TB_Salon" />-->
+            <ComboBox Header="Salon" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Salon" />
+            <ComboBox Header="Usługa" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Service" />
+            <ComboBox Header="Fryzjer" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Hairdresser" />
+            <DatePicker Header="Data i godzina wizyty" Margin="10" HorizontalAlignment="Stretch" x:Name="DP_Date" />
+            <ComboBox IsEditable="False" Header="Cena wizyty" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Price" />
 
             <!-- Form Buttons -->
             <StackPanel Orientation="Horizontal">
@@ -38,7 +40,25 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <ListView Grid.Row="1" Header="Salon | Fryzjer | Usługa | Data i godzina wizyty | Cena wizyty" x:Name="tableListView">
+            <ListView Grid.Row="1" 
+                      Header="Salon  |  Usługa  |  Fryzjer  |  Data i godzina wizyty  |  Cena wizyty" 
+                      x:Name="tableListView" 
+                      ItemsSource="{Binding Items, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="model:SingleServiceModel">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{x:Bind Salon}"/>
+                            <TextBlock Text="|" Margin="10, 0, 10, 0" />
+                            <TextBlock Text="{x:Bind Hairdresser}"/>
+                            <TextBlock Text="|" Margin="10, 0, 10, 0" />
+                            <TextBlock Text="{x:Bind Service}"/>
+                            <TextBlock Text="|" Margin="10, 0, 10, 0" />
+                            <TextBlock Text="{x:Bind Date}"/>
+                            <TextBlock Text="|" Margin="10, 0, 10, 0" />
+                            <TextBlock Text="{x:Bind Cost}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
         </Grid>
     </Grid>

@@ -23,7 +23,7 @@ namespace KD.KnowledgeBase.UWP.Providers
         {
             var storageFile = await this.StorageFolder.GetItemAsync(FileName) as IStorageFile;
 
-            var services = new List<SingleServiceModel>();
+            IEnumerable<SingleServiceModel> services = null;
 
             if (storageFile != null)
             {
@@ -40,7 +40,7 @@ namespace KD.KnowledgeBase.UWP.Providers
                 }
             }
 
-            return services;
+            return services ?? new List<SingleServiceModel>();
         }
 
         public async Task WriteServicesAsync(IEnumerable<SingleServiceModel> services)

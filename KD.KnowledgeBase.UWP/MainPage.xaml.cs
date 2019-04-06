@@ -1,6 +1,7 @@
-﻿using KD.KnowledgeBase.UWP.Models;
+﻿using KD.KnowledgeBase.UWP.Databases;
+using KD.KnowledgeBase.UWP.Models;
 using KD.KnowledgeBase.UWP.Providers;
-using System.IO;
+using KD.KnowledgeBase.UWP.ViewModels;
 using System.Linq;
 using Windows.ApplicationModel;
 using Windows.Foundation;
@@ -13,7 +14,8 @@ namespace KD.KnowledgeBase.UWP
 {
     public sealed partial class MainPage : Page
     {
-        private IServiceProvider ServiceProvider { get; }
+        private RulesDbContext Context { get; }
+        private SingleServiceViewModel ViewModel { get; }
 
         public MainPage()
         {
@@ -22,45 +24,51 @@ namespace KD.KnowledgeBase.UWP
             ApplicationView.PreferredLaunchViewSize = new Size(1000, 440);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
-            this.ServiceProvider = new ServiceProvider("services.json", ApplicationData.Current.LocalFolder);
-
             App.Current.Suspending += App_Suspending;
+
+            this.Context = new RulesDbContext();
+            this.ViewModel = new SingleServiceViewModel(new ServiceProvider("services.json", ApplicationData.Current.LocalFolder), this.Context);
+            this.DataContext = this.ViewModel;
+
+            this.FillComboBoxes();
+        }
+
+        private void FillComboBoxes()
+        {
+            this.Context.Prices.ToList().ForEach(x => this.CB_Price.Items.Add(x));
+            this.Context.Hairdressers.ToList().ForEach(x => this.CB_Hairdresser.Items.Add(x));
+            this.Context.Salons.ToList().ForEach(x => this.CB_Salon.Items.Add(x));
+            this.Context.Services.ToList().ForEach(x => this.CB_Service.Items.Add(x));
         }
 
         private void ButtonSaveClick(object sender, RoutedEventArgs e)
         {
-            // Add new record.
+            var model = new SingleServiceModel
+            {
+                Cost = this.CB_Price?.SelectedItem?.ToString(),
+                Date = this.DP_Date.Date.Date,
+                Hairdresser = this.CB_Hairdresser?.SelectedItem?.ToString(),
+                Salon = this.CB_Salon?.SelectedItem?.ToString(),
+                Service = this.CB_Service?.SelectedItem?.ToString()
+            };
+
+            this.ViewModel.Add(model);
         }
 
         private void ButtonDeleteClick(object sender, RoutedEventArgs e)
         {
-            var selectedItem = this.tableListView.SelectedItem;
-            if (selectedItem != null)
-            {
-                this.tableListView.Items.Remove(selectedItem);
-            }
+            this.ViewModel.Delete(this.tableListView.SelectedItem);
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var services = await this.ServiceProvider.ReadServicesAsync();
-                services.ToList().ForEach(model => this.tableListView.Items.Add(model));
-            }
-            catch (FileNotFoundException ex)
-            {
-                // TODO: Handle exception
-            }
+            await this.ViewModel.LoadAsync();
         }
 
         private async void App_Suspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-
-            var services = this.tableListView.Items.OfType<SingleServiceModel>();
-            await this.ServiceProvider.WriteServicesAsync(services);
-
+            await this.ViewModel.SaveAsync();
             deferral.Complete();
         }
     }
