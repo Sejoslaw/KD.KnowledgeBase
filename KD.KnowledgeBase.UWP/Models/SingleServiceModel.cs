@@ -1,13 +1,17 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace KD.KnowledgeBase.UWP.Models
 {
     public class SingleServiceModel
     {
+        public string Location { get; set; }
         public string Salon { get; set; }
-        public string Hairdresser { get; set; }
-        public string Service { get; set; }
-        public DateTime? Date { get; set; }
-        public string Cost { get; set; }
+        public List<HairdresserModel> Hairdressers { get; set; }
+    }
+
+    public class HairdresserModel
+    {
+        public string Name { get; set; }
+        public List<string> Services { get; set; }
     }
 }

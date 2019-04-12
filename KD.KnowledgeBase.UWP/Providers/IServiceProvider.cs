@@ -6,7 +6,7 @@ namespace KD.KnowledgeBase.UWP.Providers
 {
     public interface IServiceProvider
     {
-        Task<IEnumerable<SingleServiceModel>> ReadServicesAsync();
-        Task WriteServicesAsync(IEnumerable<SingleServiceModel> services);
+        Task<IEnumerable<SavedServiceModel>> ReadServicesAsync();
+        Task WriteServicesAsync(IEnumerable<SavedServiceModel> services);
     }
 }

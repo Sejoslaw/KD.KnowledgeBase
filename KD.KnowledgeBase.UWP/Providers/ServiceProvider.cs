@@ -19,11 +19,11 @@ namespace KD.KnowledgeBase.UWP.Providers
             this.StorageFolder = storageFolder;
         }
 
-        public async Task<IEnumerable<SingleServiceModel>> ReadServicesAsync()
+        public async Task<IEnumerable<SavedServiceModel>> ReadServicesAsync()
         {
             var storageFile = await this.StorageFolder.GetItemAsync(FileName) as IStorageFile;
 
-            IEnumerable<SingleServiceModel> services = null;
+            IEnumerable<SavedServiceModel> services = null;
 
             if (storageFile != null)
             {
@@ -35,15 +35,15 @@ namespace KD.KnowledgeBase.UWP.Providers
 
                         await reader.LoadAsync(streamSize);
                         var json = reader.ReadString(streamSize);
-                        services = JsonConvert.DeserializeObject<List<SingleServiceModel>>(json);
+                        services = JsonConvert.DeserializeObject<List<SavedServiceModel>>(json);
                     }
                 }
             }
 
-            return services ?? new List<SingleServiceModel>();
+            return services ?? new List<SavedServiceModel>();
         }
 
-        public async Task WriteServicesAsync(IEnumerable<SingleServiceModel> services)
+        public async Task WriteServicesAsync(IEnumerable<SavedServiceModel> services)
         {
             var storageFile = await this.StorageFolder.CreateFileAsync(FileName, CreationCollisionOption.OpenIfExists);
 

@@ -12,15 +12,15 @@ namespace KD.KnowledgeBase.UWP.ViewModels
     public class SingleServiceViewModel
     {
         private IServiceProvider ServiceProvider { get; }
-        private IRuleDbContext Context { get; }
+        private RulesDbContext Context { get; }
 
-        public ICollection<SingleServiceModel> Items { get; }
+        public ICollection<SavedServiceModel> Items { get; }
 
-        public SingleServiceViewModel(IServiceProvider serviceProvider, IRuleDbContext context)
+        public SingleServiceViewModel(IServiceProvider serviceProvider, RulesDbContext context)
         {
             this.ServiceProvider = serviceProvider;
             this.Context = context;
-            this.Items = new ObservableCollection<SingleServiceModel>();
+            this.Items = new ObservableCollection<SavedServiceModel>();
         }
 
         public async Task LoadAsync()
@@ -43,19 +43,16 @@ namespace KD.KnowledgeBase.UWP.ViewModels
             await this.ServiceProvider.WriteServicesAsync(this.Items);
         }
 
-        public void Add(SingleServiceModel model)
+        public void Add(SavedServiceModel model)
         {
-            if (this.Context.RuleExists(model))
-            {
-                this.Items.Add(model);
-            }
+            this.Items.Add(model);
         }
 
         public void Delete(object selectedItem)
         {
-            if (selectedItem != null && selectedItem is SingleServiceModel)
+            if (selectedItem != null && selectedItem is SavedServiceModel)
             {
-                this.Items.Remove(selectedItem as SingleServiceModel);
+                this.Items.Remove(selectedItem as SavedServiceModel);
             }
         }
     }

@@ -35,20 +35,17 @@ namespace KD.KnowledgeBase.UWP
 
         private void FillComboBoxes()
         {
-            this.Context.Prices.ToList().ForEach(x => this.CB_Price.Items.Add(x));
-            this.Context.Hairdressers.ToList().ForEach(x => this.CB_Hairdresser.Items.Add(x));
-            this.Context.Salons.ToList().ForEach(x => this.CB_Salon.Items.Add(x));
-            this.Context.Services.ToList().ForEach(x => this.CB_Service.Items.Add(x));
+            this.CB_Location.Items.Add("Wola");
+            this.CB_Location.Items.Add("Centrum");
         }
 
         private void ButtonSaveClick(object sender, RoutedEventArgs e)
         {
-            var model = new SingleServiceModel
+            var model = new SavedServiceModel
             {
-                Cost = this.CB_Price?.SelectedItem?.ToString(),
-                Date = this.DP_Date.Date.Date,
-                Hairdresser = this.CB_Hairdresser?.SelectedItem?.ToString(),
+                Location = this.CB_Location?.SelectedItem?.ToString(),
                 Salon = this.CB_Salon?.SelectedItem?.ToString(),
+                Hairdresser = this.CB_Hairdresser?.SelectedItem?.ToString(),
                 Service = this.CB_Service?.SelectedItem?.ToString()
             };
 
@@ -70,6 +67,52 @@ namespace KD.KnowledgeBase.UWP
             var deferral = e.SuspendingOperation.GetDeferral();
             await this.ViewModel.SaveAsync();
             deferral.Complete();
+        }
+
+        private void CB_Location_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.CB_Salon.SelectedItem = null;
+            this.CB_Salon.Items.Clear();
+
+            this.Context.Database
+                .Where(model => model.Location.Equals(this.CB_Location.SelectedItem?.ToString()))
+                .Select(model => model.Salon)
+                .Distinct()
+                .ToList()
+                .ForEach(salon => this.CB_Salon.Items.Add(salon));
+
+            this.CB_Salon_SelectionChanged(sender, e);
+        }
+
+        private void CB_Salon_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.CB_Hairdresser.SelectedItem = null;
+            this.CB_Hairdresser.Items.Clear();
+
+            this.Context.Database
+                .Where(model => model.Location.Equals(this.CB_Location.SelectedItem?.ToString()) && model.Salon.Equals(this.CB_Salon.SelectedItem?.ToString()))
+                .Select(model => model.Hairdressers)
+                .SelectMany(model => model.ToList())
+                .Select(model => model.Name)
+                .ToList()
+                .ForEach(model => this.CB_Hairdresser.Items.Add(model));
+
+            this.CB_Hairdresser_SelectionChanged(sender, e);
+        }
+
+        private void CB_Hairdresser_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.CB_Service.SelectedItem = null;
+            this.CB_Service.Items.Clear();
+
+            this.Context.Database
+                .Where(model => model.Location.Equals(this.CB_Location.SelectedItem?.ToString()) && model.Salon.Equals(this.CB_Salon.SelectedItem?.ToString()))
+                .Select(model => model.Hairdressers)
+                .SelectMany(model => model.ToList())
+                .Where(model => model.Name.Equals(this.CB_Hairdresser.SelectedItem?.ToString()))
+                .SelectMany(model => model.Services)
+                .ToList()
+                .ForEach(model => this.CB_Service.Items.Add(model));
         }
     }
 }

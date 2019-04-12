@@ -19,12 +19,10 @@
 
         <!-- Form -->
         <StackPanel Orientation="Vertical">
-            <!--<TextBox Header="Salon" Margin="10" x:Name="TB_Salon" />-->
-            <ComboBox Header="Salon" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Salon" />
+            <ComboBox Header="Lokalizacja" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Location" SelectionChanged="CB_Location_SelectionChanged" />
+            <ComboBox Header="Salon" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Salon" SelectionChanged="CB_Salon_SelectionChanged" />
+            <ComboBox Header="Fryzjer" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Hairdresser" SelectionChanged="CB_Hairdresser_SelectionChanged" />
             <ComboBox Header="Usługa" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Service" />
-            <ComboBox Header="Fryzjer" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Hairdresser" />
-            <DatePicker Header="Data i godzina wizyty" Margin="10" HorizontalAlignment="Stretch" x:Name="DP_Date" />
-            <ComboBox IsEditable="False" Header="Cena wizyty" Margin="10" HorizontalAlignment="Stretch" x:Name="CB_Price" />
 
             <!-- Form Buttons -->
             <StackPanel Orientation="Horizontal">
@@ -41,21 +39,19 @@
             </Grid.RowDefinitions>
 
             <ListView Grid.Row="1" 
-                      Header="Salon  |  Usługa  |  Fryzjer  |  Data i godzina wizyty  |  Cena wizyty" 
+                      Header="Lokalizacja    |    Salon    |    Fryzjer    |    Usługa"
                       x:Name="tableListView" 
                       ItemsSource="{Binding Items, Mode=TwoWay}">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="model:SingleServiceModel">
+                    <DataTemplate x:DataType="model:SavedServiceModel">
                         <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{x:Bind Location}"/>
+                            <TextBlock Text="|" Margin="10, 0, 10, 0" />
                             <TextBlock Text="{x:Bind Salon}"/>
                             <TextBlock Text="|" Margin="10, 0, 10, 0" />
                             <TextBlock Text="{x:Bind Hairdresser}"/>
                             <TextBlock Text="|" Margin="10, 0, 10, 0" />
                             <TextBlock Text="{x:Bind Service}"/>
-                            <TextBlock Text="|" Margin="10, 0, 10, 0" />
-                            <TextBlock Text="{x:Bind Date}"/>
-                            <TextBlock Text="|" Margin="10, 0, 10, 0" />
-                            <TextBlock Text="{x:Bind Cost}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
